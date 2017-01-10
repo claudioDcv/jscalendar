@@ -132,4 +132,4 @@ ControladorHTML.prototype.vetanaNuevoEvento = function (arguments) {
 }
 
 
-var dia = new Dia(data,"05/24/2016 00:00:00",{debug_mode : false});
+var dia = new Dia(data,"05/24/2016 00:00:00");
