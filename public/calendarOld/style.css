@@ -1,0 +1,178 @@
+body {
+  background-color: #ddd;
+  color: #000;
+  font-family: sans-serif,'Helvetica','Arial','Sans';
+}
+
+.cont-calendar{
+  overflow: auto;
+max-width: 100%;
+}
+
+.calendar {
+  width: 3698px;
+margin: 0px auto;
+}
+
+.calendar-day {
+  width: 100%;
+  background-color: hsl(0, 0%, 100%);
+  font-size: 22px;
+  line-height: 50%;
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 0px;
+  padding-bottom: 0;
+  text-align: center;
+  display: inline-block;
+}
+.calendar-day .label{
+  float: left;
+font-size: 12px;
+padding: 0;
+margin: 0;
+width: 50px;
+height: 20px;
+outline: solid 1px hsl(200, 18%, 46%);
+}
+.calendar-day div.container-hours{
+  float: left;
+    font-size: 12px;
+    padding: 0;
+    margin: 0;
+    width: auto;
+    height: 20px;
+}
+
+
+.calendar-day div div{
+  float: left;
+font-size: 12px;
+padding: 0;
+margin: 0;
+width: 38px;
+height: 20px;
+outline: solid 1px hsl(200, 18%, 46%);
+}
+
+.quince-minuto-now {
+  background-color: #aaa;
+}
+.quince-minuto-actividad{
+  background-color: hsl(163, 32%, 55%);
+}
+.special {
+  background-color: #AAA;
+  box-shadow: 0px 2px 1px 0px rgba(255, 20, 20, 0.1);
+}
+
+.calendar-day div div:hover {
+  background-color: #aaa;
+  color: #FFF;
+
+}
+
+.calendar-day-agendado{
+  background: hsl(45, 100%, 51%);
+  color: hsl(200, 18%, 46%);
+}
+.calendar-day-agendado:hover {
+  background: hsl(45, 100%, 71%);
+  color: #FFF;
+}
+
+.calendar-year-agendado{
+  background: hsl(45, 100%, 51%);
+  color: hsl(200, 18%, 46%);
+}
+.calendar-year-agendado:hover {
+  background: hsl(45, 100%, 71%);
+  color: #FFF;
+}
+.calendar-month-agendado{
+  background: hsl(45, 100%, 51%);
+  color: hsl(200, 18%, 46%);
+}
+.calendar-month-agendado:hover {
+  background: hsl(45, 100%, 71%);
+  color: #FFF;
+}
+
+.calendar-months {
+  text-align: left;
+  width: 100%;
+  overflow: hidden;
+}
+
+.month-element {
+  display: inline-block;
+  margin: 15px;
+  cursor: pointer;
+}
+
+
+button{
+  border: none;
+background: hsl(0, 0%, 100%);
+border-left: solid 1px hsl(0, 0%, 87%);
+padding: 4px;
+border-bottom: solid 1px hsl(0, 0%, 87%);
+}
+button:hover{
+  background: #aaaaaa;
+  color: white;
+}
+
+#modal-create-activity{
+  display: block;
+  background: hsla(0, 0%, 0%, 0.8);
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+.modal-create-activity-box{
+  padding: 15px 15px 84px 15px;
+  background: hsl(0, 0%, 100%);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  width: 430px;
+  height: 400px;
+  box-shadow: 1px 1px 33px hsl(0, 0%, 0%);
+  max-width: 95%;
+  max-height: 95%;
+  box-sizing: border-box;
+}
+.modal-footer{
+  background: hsl(0, 0%, 94%);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 15px;
+  border-top: solid 1px hsl(0, 0%, 80%);
+}
+#modal-close , #modal-agendar{
+  bottom: 20px;
+  background: hsl(45, 100%, 51%);
+  color: hsl(0, 0%, 19%);
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+}
+.modal-body input[type="text"]{
+  width: 100%;
+  margin: 5px 0;
+    min-height: 42px;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: solid 1px hsl(0, 0%, 80%);
+    color: hsl(0, 0%, 28%);
+}

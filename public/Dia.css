@@ -1,0 +1,158 @@
+html,body{
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+button.agregar-evento{
+  position: absolute;
+  bottom: 30px;
+  left: 30px;
+  border: none;
+  background: hsl(207, 90%, 54%);
+  padding: 10px;
+  color: hsl(0, 0%, 100%);
+}
+#dia-calendario{
+  height: 100%;
+  overflow: auto;
+}
+#dia{
+  padding-left: 180px;
+  height: 1680px;
+  font-size: 10px;
+  font-family: sans-serif;
+}
+#dia > div{
+  outline: solid 1px hsl(0, 0%, 85%);
+  position: relative;
+}
+#dia div.evento{
+  background-color: hsl(0, 0%, 92%);
+}
+#dia div.vacio{
+}
+#dia div p{
+  display: inline-block;
+  margin: 10px;
+  font-size: 12px;
+}
+
+.dia-show{
+  display: block;
+}
+.dia-hide{
+  display: none;
+}
+.dia-defecto-container{
+  background: hsla(0, 0%, 0%, 0.7);
+  z-index: 999;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.dia-defecto-ventana input.fecha{
+  width: 50%;
+  border: solid 1px hsl(0, 0%, 27%);
+  height: 30px;
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+.dia-defecto-ventana input.title
+{
+  width: 100%;
+  border: none;
+  border-bottom: solid 2px hsl(0, 0%, 80%);
+  height: 30px;
+  padding: 15px;
+  box-sizing: border-box;
+  margin-bottom: 15px;
+}
+
+.dia-defecto-ventana input.mensaje
+{
+  width: 100%;
+  border: none;
+  height: 30px;
+  padding: 0;
+  box-sizing: border-box;
+  color: hsl(0, 0%, 80%);
+}
+
+.dia-defecto-ventana{
+  background: hsla(0, 0%, 100%,1);
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: 320px;
+  height: 250px;
+}
+.dia-defecto-head{
+  color: hsl(0, 0%, 27%);
+  font-size: 18px;
+  height: 40px;
+  width: 100%;
+  background: hsl(0, 0%, 94%);
+  border-bottom: solid 1px hsl(0, 0%, 59%);
+  font-family: sans-serif;
+  padding: 10px 15px;
+  box-sizing: border-box;        }
+.dia-defecto-body{
+  padding: 50px 10px 50px 10px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: hsla(0, 0%, 100%, 0);
+}
+.dia-defecto-footer{
+  height: 40px;
+  width: 100%;
+  background: hsl(0, 0%, 100%);
+  border-top: solid 1px hsl(0, 0%, 59%);
+  position: absolute;
+  bottom: 0;
+}
+.dia-btn{
+  border: solid 1px hsl(0, 0%, 85%);
+  position: relative;
+  display: inline-block;
+  background: hsl(0, 0%, 100%);
+  color: hsl(0, 0%, 52%);
+}
+.dia-btn-evento-contenedor{
+  outline: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 7px;
+}
+.dia-btn-ok{
+  background: hsl(199, 98%, 48%);
+  border: none;
+  height: 100%;
+  width: 50%;
+  color: hsl(0, 0%, 100%);
+}
+.dia-btn-nok{
+  background: hsl(4, 90%, 58%);
+  border: none;
+  height: 100%;
+  width: 50%;
+  color: hsl(0, 0%, 100%);
+}
+
+.dia-btn-del{
+  background: hsl(14, 100%, 57%);
+  border: hsl(4, 90%, 58%) 1px solid;
+  color: hsl(0, 0%, 100%);
+}

@@ -1,0 +1,204 @@
+#calendar div {text-align: center;}
+table{
+  border: hsl(0, 0%, 83%) 1px solid;
+  position: relative;
+  width: 420px;
+  font-family: 'Helvetico','Arial','Sans',sans-serif;
+  text-align: left;
+  padding: 0;
+border-collapse: collapse;
+margin: 30px auto;
+    display: inline-block;
+}
+table tr td {text-align: right;}
+table tr.calendar-header-day td{
+  padding: 5px;
+  box-sizing: border-box;
+  height: 26px;
+  display: block;
+  float: left;
+  width: 60px;
+}
+
+table tr.calendar-header-day-action{
+  position: absolute;
+top: 51px;
+height: 265px;
+left: 0;
+width: 420px;
+overflow: scroll;
+}
+
+table tr.calendar-header-day-action td{
+  background: hsl(0, 0%, 100%);
+      width: 418px;
+      display: block;
+      height: 50px;
+      outline: hsl(0, 0%, 83%) solid 1px;
+      text-align: left;
+      padding: 15px;
+      box-sizing: border-box;
+}
+
+table tr.calendar-content-week td{
+  padding: 5px;
+  box-sizing: border-box;
+  outline: solid 1px hsl(0, 0%, 92%);
+  min-height: 40px;
+  display: block;
+  float: left;
+  width: 60px;
+}
+table tr td.month-before{
+  background: hsl(0, 0%, 92%);
+  color: hsl(0, 0%, 53%)
+}
+table tr td.month-actual{}
+table tr td.month-next{
+  background: hsl(0, 0%, 92%);
+color: hsl(0, 0%, 53%);
+}
+
+
+table tr.calendar-year-container{
+  /*display: none;*/
+  width: 420px;
+    position: absolute;
+    right: 0;
+    left: 0;
+    top: 51px;
+    margin: auto;
+    height: 265px;
+    background: hsl(0, 0%, 83%);
+}
+table tr .calendar-button-year{
+  width: 60px;
+  background: hsl(0, 0%, 92%);
+  border: none;
+  font-size: 12px;
+  padding: 8px 6px;
+  outline: solid 1px hsl(0, 0%, 83%);
+  margin: 0 0px;
+  height: 53px;
+}
+table tr .calendar-year-current{
+  background: hsl(0, 0%, 97%);
+}
+table tr .calendar-button-year:hover{
+  background: hsl(0, 0%, 88%);
+}
+table tr.calendar-year-header button:nth-child(1),
+table tr.calendar-year-header button:nth-child(5){
+  background: hsl(0, 0%, 100%);
+      border: none;
+      outline: hsl(0, 0%, 83%) 1px solid;
+      width: 60px;
+      height: 50px;
+      font-size: 16px;
+      color: hsl(199, 98%, 48%);
+      cursor: pointer;
+      vertical-align: top;
+}
+table tr.calendar-year-header button:nth-child(2){
+  background: hsl(0, 0%, 100%);
+    border: none;
+    outline: hsl(0, 0%, 83%) 1px solid;
+    width: 90px;
+    height: 50px;
+    font-size: 16px;
+    color: hsl(199, 98%, 48%);
+    cursor: pointer;
+    vertical-align: top;
+}
+table tr.calendar-year-header button:nth-child(3){
+  background: hsl(0, 0%, 100%);
+border: none;
+outline: hsl(0, 0%, 83%) 1px solid;
+width: 150px;
+height: 50px;
+font-size: 16px;
+color: hsl(199, 98%, 48%);
+cursor: pointer;
+    vertical-align: top;
+}
+table tr.calendar-year-header button:nth-child(4){
+  background: hsl(0, 0%, 100%);
+border: none;
+outline: hsl(0, 0%, 83%) 1px solid;
+width: 60px;
+height: 50px;
+font-size: 16px;
+color: hsl(199, 98%, 48%);
+cursor: pointer;
+vertical-align: top;
+}
+
+table tr .calendar-current-day {
+  background: hsl(0, 0%, 97%);
+  color: hsl(0, 100%, 50%);
+}
+
+table tr.calendar-year-header button:hover{
+  background: hsl(0, 0%, 92%);
+}
+table tr button.calendar-year-container-button{
+  position: absolute;
+    top: -51px;
+    background: hsl(0, 0%, 100%);
+    border: none;
+    outline: hsl(0, 0%, 83%) 1px solid;
+    height: 50px;
+    font-size: 16px;
+    color: hsl(199, 98%, 48%);
+    cursor: pointer;
+}
+table tr button.calendar-year-container-button-prev{
+  width: 59px;
+  left: 0;
+}
+table tr button.calendar-year-container-button-next{
+  right: 0;
+  width: 60px;
+}
+table tr button.calendar-year-container-button:hover{
+  background: hsl(0, 0%, 92%);
+}
+table tr button.calendar-button-month{
+  width: 105px;
+background: hsl(0, 0%, 92%);
+border: none;
+font-size: 12px;
+padding: 8px 6px;
+outline: solid 1px hsl(0, 0%, 83%);
+margin: 0 0px;
+height: 88px;
+}
+table tr button.calendar-button-month-current{
+  background: hsl(0, 0%, 97%);
+}
+table tr button.calendar-button-month-actual{
+  color: red;
+}
+table tr button.calendar-button-month:hover{
+  background: hsl(0, 0%, 88%);
+}
+table tr .calendar-year-actual{
+  color: red;
+}
+
+table tr .set-day {
+  background: hsl(0, 0%, 53%);
+    color: hsl(0, 0%, 100%);
+}
+
+#calendar-destiny{
+  display: block;
+margin: auto;
+width: 420px;
+height: 40px;
+font-size: 18px;
+text-align: center;
+}
+table tr.calendar-content-week td:hover{
+  background: hsl(0, 0%, 88%);
+}
