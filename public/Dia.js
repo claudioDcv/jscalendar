@@ -478,23 +478,27 @@ Dia.prototype.eliminarBloqueAccion = function (elm) {
 
 }
 
+
+Dia.prototype.clicYEditarEvento = function (event) {
+
+  var data = event.srcElement.parentNode.childNodes[0].dataset;
+  var bloque = this.bloqueHorario[data.numero];
+  bloque.data.title = prompt("Titulo actividad " + new Fecha(bloque.start));
+  this.crearHTML();
+
+}
 Dia.prototype.crearHTML = function () {
 
   this.wrapp.innerHTML = "";
-
   var arregloBLoque = [];
   var sumaPorcentajes = 0;
   var i = 0;
-
   for ( i ; i < this.BLOQUES_TOTALES();) {
-
-    var bloque = this.tag('div','evento');
+    var bloque = new SL('div','evento').elm;
     var objeto = this.bloqueHorario[i];
-
-    var botonContenedor = this.tag("div","dia-btn-evento-contenedor");
-    var botonEliminar = this.tag("button",'dia-btn dia-btn-del','Eliminar');
-    var botonEditar = this.tag('button','dia-btn dia-btn-editar','Editar');
-
+    var botonContenedor = new SL("div","dia-btn-evento-contenedor").elm;
+    var botonEliminar = new SL("button",'dia-btn dia-btn-del','Eliminar').elm;
+    var botonEditar = new SL('button','dia-btn dia-btn-editar','Editar').elm;
     var a = this.bloqueHorario[i].bloques;
 
         sumaPorcentajes += a;
@@ -518,6 +522,8 @@ Dia.prototype.crearHTML = function () {
                   ['start',new Fecha(objeto.start).getTime()]
                 ]);
                 botonEliminar.addEventListener('click',this.clicYEliminarEvento.bind(this),false);
+                botonEditar.addEventListener('click',this.clicYEditarEvento.bind(this),false);
+
                 this.addChild(botonContenedor,[botonEliminar,botonEditar]);
                 this.addChild(bloque,botonContenedor);
 
