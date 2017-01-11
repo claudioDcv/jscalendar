@@ -41,8 +41,6 @@ gulp.task('scss', () => {
     //.pipe(sass().on('error', sass.logError)))
     //.pipe(gulp.dest('dist'))
 
-
-
     .pipe(refresh(opts));
 
 })

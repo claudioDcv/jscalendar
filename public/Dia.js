@@ -215,8 +215,7 @@ Dia.prototype.agregarEventoDesdeUnPunto = function (punto,evento) {
         evento.id_actual,
         evento.start,
         evento.end,
-        evento.bloques,
-        evento.data
+        evento.bloques
       );
     }
 
@@ -292,8 +291,7 @@ Dia.prototype.agregarNuevo = function (evento) {
                             evt.end,
                             this.calcularDiferenciaStartEnd(
                               evt.start,evt.end
-                            ).bloques,
-                            evt.data
+                            ).bloques
                           );
           this.bloqueHorario[i] = evento;
 
@@ -304,8 +302,7 @@ Dia.prototype.agregarNuevo = function (evento) {
                             this.id_actual,
                             evt.start,
                             evt.end,
-                            this.calcularDiferenciaStartEnd(evt.start,evt.end).bloques,
-                            evt.data
+                            this.calcularDiferenciaStartEnd(evt.start,evt.end).bloques
                           );
           this.bloqueHorario[i] = evento;
 
@@ -355,38 +352,20 @@ Dia.prototype._crearHorarioDelDia = function () {
 
       if ( (new Fecha(evt.end)).getTime() === a) {
 
-        var evento = new EventoCont(
-                            j,
-                            evt.start,
-                            evt.end,
-                            this.calcularDiferenciaStartEnd(evt.start,evt.end).bloques,
-                            evt.data
-                          );
+        var evento = new EventoCont(j,evt.start,evt.end,this.calcularDiferenciaStartEnd(evt.start,evt.end).bloques);
           this.bloqueHorario[i] = evento;
 
       }else
       if ( (new Fecha(evt.end)).getTime() > a && (new Fecha(evt.start)).getTime() < a) {
 
-        var evento = new EventoCont(
-                            j,
-                            evt.start,
-                            evt.end,
-                            this.calcularDiferenciaStartEnd(evt.start,evt.end).bloques,
-                            evt.data
-                          );
+        var evento = new EventoCont(j,evt.start,evt.end,this.calcularDiferenciaStartEnd(evt.start,evt.end).bloques);
           this.bloqueHorario[i] = evento;
 
       }else
       if ( (new Fecha(evt.start)).getTime() === a) {
 
           this.id_actual = j;
-          var evento = new Evento(
-                              j,
-                              evt.start,
-                              evt.end,
-                              this.calcularDiferenciaStartEnd(evt.start,evt.end).bloques,
-                              evt.data
-                            );
+          var evento = new Evento(j,evt.start,evt.end,this.calcularDiferenciaStartEnd(evt.start,evt.end).bloques,evt.data);
           this.bloqueHorario[i] = evento;
 
       }
@@ -481,13 +460,14 @@ Dia.prototype.eliminarBloqueAccion = function (elm) {
 
 Dia.prototype.clicYEditarEvento = function (event) {
 
+  //Abrir Modal Editar Evento
   var data = event.srcElement.parentNode.childNodes[0].dataset;
   var bloque = this.bloqueHorario[data.numero];
-  var newTitle = prompt("Titulo actividad " + new Fecha(bloque.start));
-  if (newTitle) {
-    bloque.data.title = newTitle;
-  }
-  this.crearHTML();
+
+  this.controladorHTML.openEdit({
+    title: bloque.data.title,
+    node : event.srcElement.parentNode.childNodes[0]
+  },this);
 
 }
 Dia.prototype.crearHTML = function () {

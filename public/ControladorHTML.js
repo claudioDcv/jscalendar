@@ -4,36 +4,18 @@ var ControladorHTML = function(dia){
   this.text = {
     btn_cancel : 'Cancelar',
     btn_add : 'Agregar',
-    btn_add_event: 'Agregar Evento'
+    btn_add_event: 'Agregar Evento',
+    btn_edit_event: 'Editar Evento'
   }
   this.contenedor = document.createElement('div');
   //this.title = document.createTextNode('Claudio heramientas');
   //this.contenedor.appendChild(this.title);
+  this.default = {};
+  this.default.title = "t";
+
   dia.dia.appendChild(this.contenedor);
   this.vetanaNuevoEvento();
-
-}
-
-ControladorHTML.prototype.tag = function(obj,cssClass,text){
-  var elm;
-  if (obj.indexOf('input,') != -1) {
-    var _obj = obj.split(',');
-    obj = _obj[0];
-    elm = document.createElement(obj);
-    elm.name = _obj[1];
-    if (text) {
-      elm.value = text;
-    }
-  }else{
-    elm = document.createElement(obj);
-    if (text) {
-      elm.appendChild(document.createTextNode(text));
-    }
-  }
-
-    if(cssClass){elm.className = cssClass};
-
-  return elm;
+  this.modalEditInit('hide');
 }
 
 ControladorHTML.prototype.addChild = function (obj,child) {
@@ -60,20 +42,19 @@ ControladorHTML.prototype.addData = function(elm,name,value){
 
 ControladorHTML.prototype.vetanaNuevoEvento = function (arguments) {
 
-  console.log(this);
-  var openBtn = this.tag('button','agregar-evento',this.text.btn_add_event);
-  var head = this.tag('div','dia dia-nuevo-evento-head  dia-defecto-head',this.text.btn_add_event);
-  var body = this.tag('div','dia dia-nuevo-evento-body dia-defecto-body');
-  var msg = this.tag('input,msg','mensaje');
+  var openBtn = new SL('button','agregar-evento',this.text.btn_add_event).elm;
+  var head = new SL('div','dia dia-nuevo-evento-head  dia-defecto-head',this.text.btn_add_event).elm;
+  var body = new SL('div','dia dia-nuevo-evento-body dia-defecto-body').elm;
+  var msg = new SL('input,msg','mensaje').elm;
       msg.readOnly = true;
-  var title = this.tag('input,title','title','Una actividad creada desde afuera');
-  var inicio = this.tag('input,inicio','fecha',"09:00");
-  var termino = this.tag('input,termino','fecha',"09:59");
-  var container = this.tag('div','dia-hide dia dia-nuevo-evento-container dia-defecto-container');
-  var footer = this.tag('div','dia dia-nuevo-evento-footer  dia-defecto-footer');
-  var ventana = this.tag('div','dia dia-nuevo-evento-ventana dia-defecto-ventana');
-  var ok = this.tag('button','dia-btn-ok',this.text.btn_add);
-  var nok = this.tag('button','dia-btn-nok',this.text.btn_cancel);
+  var title = new SL('input,title','title','Una actividad creada desde afuera').elm;
+  var inicio = new SL('input,inicio','fecha',"09:00").elm;
+  var termino = new SL('input,termino','fecha',"09:59").elm;
+  var container = new SL('div','dia-hide dia dia-nuevo-evento-container dia-defecto-container').elm;
+  var footer = new SL('div','dia dia-nuevo-evento-footer  dia-defecto-footer').elm;
+  var ventana = new SL('div','dia dia-nuevo-evento-ventana dia-defecto-ventana').elm;
+  var ok = new SL('button','dia-btn-ok',this.text.btn_add).elm;
+  var nok = new SL('button','dia-btn-nok',this.text.btn_cancel).elm;
 
   this.addChild(body,[msg,title,inicio,termino]);
   this.addChild(footer,[ok,nok])
@@ -131,5 +112,71 @@ ControladorHTML.prototype.vetanaNuevoEvento = function (arguments) {
 
 }
 
+ControladorHTML.prototype.modalEditInit = function(toggle){
+  this.modalEdit = {};
+
+  var arguments = arguments || this.default.title;
+  var head = new SL('div','dia dia-edit-evento-head  dia-defecto-head',this.text.btn_edit_event).elm;
+  var body = new SL('div','dia dia-edit-evento-body dia-defecto-body').elm;
+  var msg = new SL('input,msg','mensaje').elm;
+      msg.readOnly = true;
+  this.modalEdit.title = new SL('input,title','title',arguments.title).elm;
+
+  this.eventoEdit = {
+    title : this.modalEdit.title
+  };
+
+  // var inicio = new SL('input,inicio','fecha',"09:00").elm;
+  // var termino = new SL('input,termino','fecha',"09:59").elm;
+  this.modalEdit.container = new SL('div','dia-'+toggle+' dia dia-nuevo-evento-container dia-defecto-container').elm;
+  var footer = new SL('div','dia dia-edit-evento-footer  dia-defecto-footer').elm;
+  var ventana = new SL('div','dia dia-edit-evento-ventana dia-defecto-ventana').elm;
+  var ok = new SL('button','dia-btn-ok',this.text.btn_add).elm;
+  var nok = new SL('button','dia-btn-nok',this.text.btn_cancel).elm;
+
+
+  function closeModalEdit(){
+      this.modalEdit.container.className = 'dia-hide dia dia-nuevo-evento-container dia-defecto-container';
+  }
+
+  function saveModalEdit(){
+      this.modalEdit.container.className = 'dia-hide dia dia-nuevo-evento-container dia-defecto-container';
+      console.log(this.dia,this.modalEdit.title.value);
+      this.dia.crearHTML();
+  }
+
+  ok.addEventListener('click',saveModalEdit.bind(this),false);
+  nok.addEventListener('click',closeModalEdit.bind(this),false);
+
+  this.addChild(body,[msg,this.modalEdit.title]);
+  this.addChild(footer,[ok,nok])
+  this.addChild(ventana,[head,body,footer]);
+  this.addChild(this.modalEdit.container,ventana);
+
+  this.addChild(this.contenedor,[this.modalEdit.container]);
+
+}
+
+ControladorHTML.prototype.ModalEdicion = function (arguments,toggle) {
+
+  this.modalEdit.title.value = arguments.title || this.default.title;
+  this.modalEdit.container.className = 'dia-'+toggle+' dia dia-nuevo-evento-container dia-defecto-container';
+  console.log(this.modalEdit);
+};
+
+ControladorHTML.prototype.getDataEditModal = function () {
+  var title = this.eventoEdit.title.value;
+
+  console.log(title);
+};
+
+ControladorHTML.prototype.openEdit = function (arguments,dia) {
+  this.dia = dia;
+  this.ModalEdicion(arguments,'show');
+};
+
+ControladorHTML.prototype.closeEdit = function (arguments) {
+  this.ModalEdicion(arguments,'hide');
+};
 
 var dia = new Dia(data,"05/24/2016 00:00:00");
