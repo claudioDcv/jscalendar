@@ -483,7 +483,10 @@ Dia.prototype.clicYEditarEvento = function (event) {
 
   var data = event.srcElement.parentNode.childNodes[0].dataset;
   var bloque = this.bloqueHorario[data.numero];
-  bloque.data.title = prompt("Titulo actividad " + new Fecha(bloque.start));
+  var newTitle = prompt("Titulo actividad " + new Fecha(bloque.start));
+  if (newTitle) {
+    bloque.data.title = newTitle;
+  }
   this.crearHTML();
 
 }
