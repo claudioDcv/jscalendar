@@ -115,41 +115,22 @@ ControladorHTML.prototype.vetanaNuevoEvento = function (arguments) {
 ControladorHTML.prototype.modalEditInit = function(toggle){
   this.modalEdit = {};
 
-  var arguments = arguments || this.default.title;
   var head = new SL('div','dia dia-edit-evento-head  dia-defecto-head',this.text.btn_edit_event).elm;
   var body = new SL('div','dia dia-edit-evento-body dia-defecto-body').elm;
   var msg = new SL('input,msg','mensaje').elm;
       msg.readOnly = true;
   this.modalEdit.title = new SL('input,title','title',arguments.title).elm;
 
-  this.eventoEdit = {
-    title : this.modalEdit.title
-  };
-
   // var inicio = new SL('input,inicio','fecha',"09:00").elm;
   // var termino = new SL('input,termino','fecha',"09:59").elm;
   this.modalEdit.container = new SL('div','dia-'+toggle+' dia dia-nuevo-evento-container dia-defecto-container').elm;
   var footer = new SL('div','dia dia-edit-evento-footer  dia-defecto-footer').elm;
   var ventana = new SL('div','dia dia-edit-evento-ventana dia-defecto-ventana').elm;
-  var ok = new SL('button','dia-btn-ok',this.text.btn_add).elm;
-  var nok = new SL('button','dia-btn-nok',this.text.btn_cancel).elm;
-
-
-  function closeModalEdit(){
-      this.modalEdit.container.className = 'dia-hide dia dia-nuevo-evento-container dia-defecto-container';
-  }
-
-  function saveModalEdit(){
-      this.modalEdit.container.className = 'dia-hide dia dia-nuevo-evento-container dia-defecto-container';
-      console.log(this.dia,this.modalEdit.title.value);
-      this.dia.crearHTML();
-  }
-
-  ok.addEventListener('click',saveModalEdit.bind(this),false);
-  nok.addEventListener('click',closeModalEdit.bind(this),false);
+  this.modalEdit.ok = new SL('button','dia-btn-ok',this.text.btn_add).elm;
+  this.modalEdit.nok = new SL('button','dia-btn-nok',this.text.btn_cancel).elm;
 
   this.addChild(body,[msg,this.modalEdit.title]);
-  this.addChild(footer,[ok,nok])
+  this.addChild(footer,[this.modalEdit.ok,this.modalEdit.nok])
   this.addChild(ventana,[head,body,footer]);
   this.addChild(this.modalEdit.container,ventana);
 
@@ -157,26 +138,17 @@ ControladorHTML.prototype.modalEditInit = function(toggle){
 
 }
 
-ControladorHTML.prototype.ModalEdicion = function (arguments,toggle) {
-
-  this.modalEdit.title.value = arguments.title || this.default.title;
+ControladorHTML.prototype.ModalEdicion = function (toggle) {
   this.modalEdit.container.className = 'dia-'+toggle+' dia dia-nuevo-evento-container dia-defecto-container';
-  console.log(this.modalEdit);
 };
 
-ControladorHTML.prototype.getDataEditModal = function () {
-  var title = this.eventoEdit.title.value;
 
-  console.log(title);
+ControladorHTML.prototype.openEdit = function () {
+  this.ModalEdicion('show');
 };
 
-ControladorHTML.prototype.openEdit = function (arguments,dia) {
-  this.dia = dia;
-  this.ModalEdicion(arguments,'show');
-};
-
-ControladorHTML.prototype.closeEdit = function (arguments) {
-  this.ModalEdicion(arguments,'hide');
+ControladorHTML.prototype.closeEdit = function () {
+  this.ModalEdicion('hide');
 };
 
 var dia = new Dia(data,"05/24/2016 00:00:00");

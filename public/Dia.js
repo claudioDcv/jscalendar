@@ -1,49 +1,3 @@
-var data = [
-  {
-    start : "05/24/2016 00:00:00",
-    end : "05/24/2016 01:59:00",
-    data : {
-      title : "Hola 2"
-    }
-  },
-  {
-    start : "05/24/2016 05:00:00",
-    end : "05/24/2016 05:29:00",
-    data : {
-      title : "Hola",
-      text : "esto es un texto..."
-    }
-  },
-  {
-    start : "05/24/2016 06:00:00",
-    end : "05/24/2016 07:29:00",
-    data : {
-      title : "Hola que tal"
-    }
-  },
-  {
-    start : "05/24/2016 08:00:00",
-    end : "05/24/2016 08:59:00",
-    data : {
-      title : "Hola que tal"
-    }
-  },
-  {
-    start : "05/24/2016 10:00:00",
-    end : "05/24/2016 18:29:00",
-    data : {
-      title : "Esto es una prueba"
-    }
-  },
-  {
-    start : "05/24/2016 20:00:00",
-    end : "05/24/2016 21:59:00",
-    data : {
-      title : "Asi es"
-    }
-  }
-];
-
 var Dia = function(data,fechaInicial,opts){
   //Formato 05/24/2016 00:00:00
   var self = this;
@@ -63,6 +17,7 @@ var Dia = function(data,fechaInicial,opts){
       this.dia.appendChild(this.wrapp);
 
   this.controladorHTML = new ControladorHTML(this);
+  this.initActionModalEdit();
   this.setData(data);
 
 }
@@ -458,16 +413,41 @@ Dia.prototype.eliminarBloqueAccion = function (elm) {
 }
 
 
-Dia.prototype.clicYEditarEvento = function (event) {
+Dia.prototype.initActionModalEdit = function(){
+  function closeModalEdit(){
+      this.controladorHTML.modalEdit.container.className = 'dia-hide dia dia-nuevo-evento-container dia-defecto-container';
+  }
 
+  function saveModalEdit(event){
+    event.stopPropagation();
+      this.controladorHTML.modalEdit.container.className = 'dia-hide dia dia-nuevo-evento-container dia-defecto-container';
+      this.bloqueEdit.data.title = this.controladorHTML.modalEdit.title.value;
+      this.crearHTML();
+  }
+
+  this.controladorHTML.modalEdit.ok.addEventListener('click',saveModalEdit.bind(this),false);
+  this.controladorHTML.modalEdit.nok.addEventListener('click',closeModalEdit.bind(this),false);
+}
+
+Dia.prototype.clicYEditarEvento = function (event) {
+  this._controladorHTML = {};
+  this._controladorHTML.modalEdit = {};
   //Abrir Modal Editar Evento
   var data = event.srcElement.parentNode.childNodes[0].dataset;
-  var bloque = this.bloqueHorario[data.numero];
+  this.bloqueEdit = this.bloqueHorario[data.numero];
 
-  this.controladorHTML.openEdit({
-    title: bloque.data.title,
-    node : event.srcElement.parentNode.childNodes[0]
-  },this);
+  var self = this;
+  //this.controladorHTML.openEdit();
+
+  /*Abrir modal e incluir info del bloque */
+  function openModal(self){
+    console.log(self.bloqueEdit.data.title,this);
+      self.controladorHTML.modalEdit.container.className = 'dia-show dia dia-nuevo-evento-container dia-defecto-container';
+      self.controladorHTML.modalEdit.title.value = self.bloqueEdit.data.title;
+  }
+
+  openModal(self);
+  //this._controladorHTML.modalEdit.title = self.bloqueEdit.data.title;
 
 }
 Dia.prototype.crearHTML = function () {
