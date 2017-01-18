@@ -29,6 +29,10 @@
 const gulp = require('gulp'),
       sass = require('gulp-sass'),
       refresh = require('gulp-refresh')
+var prettify = require('gulp-jsbeautifier');
+const jsValidate = require('gulp-jsvalidate');
+const babel = require('gulp-babel');
+var rename = require("gulp-rename");
 
       var opts = {} ;
       opts.port = 3000;
@@ -46,7 +50,32 @@ gulp.task('scss', () => {
 })
 
 
+
+gulp.task('_1', () =>
+  gulp.src(['./public/DiaES6.js'])
+    .pipe(babel({
+              presets: ['es2015']
+          }))
+    .pipe(prettify())
+    .pipe(jsValidate())
+    .pipe(rename("Dia.js"))
+    .pipe(gulp.dest('./public/'))
+);
+
+// gulp.task('_2', () =>
+//   gulp.src(['./public/EventoEventoConVacioES6.js'])
+//     .pipe(babel({
+//               presets: ['es2015']
+//           }))
+//     .pipe(prettify())
+//     .pipe(jsValidate())
+//     .pipe(rename("EventoEventoConVacio.js"))
+//     .pipe(gulp.dest('./public/'))
+// );
+
+
+
 gulp.task('watch', () => {
   refresh.listen()
-  gulp.watch('**/*.js', ['scss'])
+  gulp.watch('**/*.js', ['pf'])
 })

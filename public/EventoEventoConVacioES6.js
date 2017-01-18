@@ -22,3 +22,10 @@ var Vacio = function(id,bloques,start,end){
   this.end = end;
   this.bloques = bloques;
 }
+
+
+module "Eventos" {
+  export Evento;
+  export EventoCont;
+  export Vacio;
+}
