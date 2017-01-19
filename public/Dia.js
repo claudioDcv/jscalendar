@@ -2,6 +2,30 @@
 
 (function(window) {
 
+    /*
+    function doble(e) {
+      return e * 2;
+    }
+    
+    var arreglo = [1, 2, 3, 4, 5];
+    var resultado = arreglo.map(doble);
+    console.log(resultado); // [2, 4, 6, 8, 10];
+    var resultado = arreglo.map(e => e * 2);
+    
+    var nombres = ["John", "Jane", "Matt"];
+    var edades = [23, 45, 31];
+    
+    var personas = nombres.map(function (n, i) {
+    	return { nombre: n, edad: edades[i] };
+    });
+    console.log(personas);
+    
+    Equivalente usando la sintaxis arrow:
+    
+    var personas = nombres.map((n, i) => { return { nombre: n, edad: edades[i] } });
+    
+    */
+
     var Dia = function Dia(data, fechaInicial, opts) {
         //Formato 05/24/2016 00:00:00
         this.BLOQUES_TOTALES = 96;
@@ -15,7 +39,7 @@
         this.bloqueHorario = [];
         this.bloqueHTML;
 
-        this.id_actual = 1;
+        this.idActual = 1;
 
         this.dia = document.getElementById('dia-calendario');
         this.wrapp = document.createElement('div');
@@ -25,6 +49,9 @@
         this.controladorHTML = new ControladorHTML(this);
         this.initActionModalEdit();
         this.setData(data);
+    };
+    Dia.prototype.time = function(date) {
+        return new Fecha(date).getTime();
     };
     Dia.prototype.tamanioDivCont = function(id) {
         id.style.height = (this.BLOQUES_TOTALES === 48 ? 1680 : 3300) + 'px';
@@ -72,20 +99,22 @@
      * evento
      */
     Dia.prototype.isVacio = function(start, end) {
-        var start = new Fecha(start).getTime();
-        var end = new Fecha(end).getTime();
+        var _this = this;
+
+        var start = this.time(start);
+        var end = this.time(end);
         var isVacio = true;
         //for para comprobar los blques
         this.bloqueHorario.forEach(function(bloque) {
-            var _start = new Fecha(bloque.start).getTime();
-            var _end = new Fecha(bloque.end).getTime();
+            var _start = _this.time(bloque.start);
+            var _end = _this.time(bloque.end);
 
             var v = bloque instanceof Vacio ? 'Vacio' : '';
             v = bloque instanceof Evento ? 'Evento' : v;
             v = bloque instanceof EventoCont ? 'EventoCont' : v;
 
             //comprobar si _start esta dentro de start - end
-            if ((start <= _start && _start <= end || start <= _end && _end <= end) && v != 'Vacio') {
+            if ((start <= _start && _start <= end || start <= _end && _end <= end) && v !== 'Vacio') {
                 //entra aqui cada vez que encuentra un bloque con Evento
                 isVacio = false;
             }
@@ -93,15 +122,17 @@
         return isVacio;
     };
     Dia.prototype.isVacioOmitirBloqueActual = function(start, end, id) {
-        var start = new Fecha(start).getTime();
-        var end = new Fecha(end).getTime();
+        var _this2 = this;
+
+        var start = this.time(start);
+        var end = this.time(end);
         var isVacio = true;
         //for para comprobar los blques
         var encontroBloqueOcupado = true;
 
         this.bloqueHorario.forEach(function(bloque) {
-            var _start = new Fecha(bloque.start).getTime();
-            var _end = new Fecha(bloque.end).getTime();
+            var _start = _this2.time(bloque.start);
+            var _end = _this2.time(bloque.end);
 
             var v = bloque instanceof Vacio ? 'Vacio' : '';
             v = bloque instanceof Evento ? 'Evento' : v;
@@ -109,10 +140,10 @@
 
             //comprobar si _start esta dentro de start - end
 
-            if ((start <= _start && _start <= end || start <= _end && _end <= end) && v != 'Vacio') {
+            if ((start <= _start && _start <= end || start <= _end && _end <= end) && v !== 'Vacio') {
                 //entra aqui cada vez que encuentra un bloque con Evento
                 isVacio = false;
-                if (bloque.id == id && encontroBloqueOcupado) {
+                if (bloque.id === id && encontroBloqueOcupado) {
                     isVacio = true;
                 } else {
                     //si encuentra un bloque ocupado que no es el mismo bloque entra aqui
@@ -127,10 +158,7 @@
      */
     Dia.prototype.isFechaCorrecta = function(start, end) {
         try {
-            if (new Fecha(start).getTime() < new Fecha(end).getTime()) {
-                return true;
-            }
-            return false;
+            return this.time(start) < this.time(end) ? true : false;
         } catch (e) {
             return false;
         }
@@ -138,22 +166,22 @@
     /* Metodo publico que se llama desde afuera */
     Dia.prototype.agregarHorario = function(start, end, data) {
 
-        var start = new Fecha(start).getTime();
-        var end = new Fecha(end).getTime();
+        var start = this.time(start);
+        var end = this.time(end);
+        var seAgrego = false;
 
         if (!this.isFechaCorrecta(start, end)) {
             this.errores.push("start no puede ser mayor a end");
             return false;
         }
 
-        var seAgrego = false;
         //Ingresa al bloque si existe algun Evento dentro del bloque
         if (this.isVacio(start, end)) {
 
             var agregarDesdeEstePunto = this.calculaDesdeInicio(start);
-            var evento = new Evento(this.id_actual, start, end, this.calcularDiferenciaStartEnd(start, end).bloques, data);
+            var evento = new Evento(this.idActual, start, end, this.calcularDiferenciaStartEnd(start, end).bloques, data);
 
-            this.id_actual++;
+            this.idActual++;
             var datos = this.data;
             this.agregarEventoDesdeUnPunto(agregarDesdeEstePunto, evento);
             seAgrego = true;
@@ -163,8 +191,8 @@
 
     Dia.prototype.agregarHorarioMod = function(evento) {
         this.editEventoBloqueAntes = evento.bloques;
-        var start = new Fecha(evento.start).getTime();
-        var end = new Fecha(evento.end).getTime();
+        var start = this.time(evento.start);
+        var end = this.time(evento.end);
 
         if (!this.isFechaCorrecta(start, end)) {
             this.errores.push("start no puede ser mayor a end");
@@ -189,6 +217,7 @@
     };
 
     Dia.prototype.agregarEventoDesdeUnPunto = function(punto, evento, oldInit) {
+        var _this3 = this;
 
         var bloques = this.bloqueHorario;
         var _evento = Clonador(evento);
@@ -202,7 +231,7 @@
 
         self.bloqueHorario.forEach(function(bloque) {
 
-            if (self.bloqueHorario[indice].id == evento.id) {
+            if (self.bloqueHorario[indice].id === evento.id) {
 
                 fechaBloque = new Fecha(fecha).setMinutes(new Fecha(fecha).getMinutes() + indice * 15);
                 var f = fechaBloque;
@@ -227,7 +256,7 @@
                 isPrimero = false;
             }
 
-            if (isPrimero && new Fecha(self.bloqueHorario[i].start).getTime() == new Fecha(_evento.start).getTime()) {
+            if (isPrimero && _this3.time(self.bloqueHorario[i].start) === _this3.time(_evento.start)) {
                 self.bloqueHorario[i] = evento;
                 entrar = true;
             }
@@ -238,24 +267,6 @@
         this.crearHTML();
 
         return true;
-
-        var desde = punto;
-        var hasta = punto + evento.bloques;
-        var bloquesAnteriores = evento.bloques;
-        var recrearAVacio = this.editEventoBloqueAntes - evento.bloques;
-        var lugarLectura = 0;
-        for (var i = punto; i < hasta; i++) {
-
-            this.bloqueHorario[i].bloques = hasta - punto;
-            var bloque = this.bloqueHorario[i];
-            lugarLectura = i;
-        }
-
-        var fechaCalculada = new Fecha(evento.start).setMinutes(new Fecha(evento.start).getMinutes() + 15);
-        for (var i = lugarLectura + 1; i < lugarLectura + recrearAVacio + 1; i++) {
-            this.bloqueHorario[i] = new Vacio(i, 1, fechaCalculada, fechaCalculada);
-            fechaCalculada = new Fecha(fechaCalculada).setMinutes(new Fecha(fechaCalculada).getMinutes() + 15);
-        }
     };
 
     Dia.prototype.decimalToHours = function(numero) {
@@ -264,7 +275,21 @@
         var sec = Math.floor(Math.abs(numero) * 60 % 60);
         var stringDeRetorno = sign + (min < 10 ? 0 : "") + min + ':' + (sec < 10 ? '0' + sec : sec);
 
-        var numeroDeBoques = (min > 0 ? min * 4 : 0) + (sec == 45 ? 3 : sec == 30 ? 2 : sec == 15 ? 1 : 0);
+        switch (sec) {
+            case 45:
+                sec = 3;
+                break;
+            case 30:
+                sec = 2;
+                break;
+            case 15:
+                sec = 1;
+                break;
+            default:
+                sec = 0;
+        }
+
+        var numeroDeBoques = (min > 0 ? min * 4 : 0) + sec;
 
         return {
             bloques: numeroDeBoques,
@@ -278,7 +303,7 @@
         for (var i = 0; i < this.BLOQUES_TOTALES; i++) {
             //TODO get minutos cambiar de 15 a 30 segun corresponda
             this.fecha.setMinutes(this.fecha.getMinutes() + this.bloqueMinimo);
-            if (new Fecha(start).getTime() == new Fecha(this.fecha).getTime()) {
+            if (this.time(start) === this.time(this.fecha)) {
                 bloquesDesdeInicio = i + 1;
                 break;
             }
@@ -287,7 +312,7 @@
     };
 
     Dia.prototype.calcularDiferenciaStartEnd = function(start, end) {
-        var obj = this.decimalToHours((new Fecha(end).getTime() + 100000 - new Fecha(start).getTime()) / 3600000);
+        var obj = this.decimalToHours((this.time(end) + 100000 - this.time(start)) / 3600000);
         return obj;
     };
 
@@ -296,22 +321,22 @@
             var a = this.bloqueHorario[i];
             var evt = evento;
             if (new Fecha(evt.end).getTime() === a) {
-                var evento = new EventoCont(this.id_actual, evt.start, evt.end, this.calcularDiferenciaStartEnd(evt.start, evt.end).bloques);
+                var evento = new EventoCont(this.idActual, evt.start, evt.end, this.calcularDiferenciaStartEnd(evt.start, evt.end).bloques);
                 this.bloqueHorario[i] = evento;
             } else if (new Fecha(evt.end).getTime() > a && new Fecha(evt.start).getTime() < a) {
-                var evento = new EventoCont(this.id_actual, evt.start, evt.end, this.calcularDiferenciaStartEnd(evt.start, evt.end).bloques);
+                var evento = new EventoCont(this.idActual, evt.start, evt.end, this.calcularDiferenciaStartEnd(evt.start, evt.end).bloques);
                 this.bloqueHorario[i] = evento;
             } else if (new Fecha(evt.start).getTime() === a) {
-                var evento = new Evento(this.id_actual, evt.start, evt.end, this.calcularDiferenciaStartEnd(evt.start, evt.end).bloques, evt.data);
+                var evento = new Evento(this.idActual, evt.start, evt.end, this.calcularDiferenciaStartEnd(evt.start, evt.end).bloques, evt.data);
                 this.bloqueHorario[i] = evento;
             }
         }
 
-        this.id_actual++;
+        this.idActual++;
     };
 
     Dia.prototype._crearHorarioDelDia = function() {
-        var id_evento_cont = 0;
+        var idEventoCont = 0;
         for (var i = 0; i < this.BLOQUES_TOTALES; i++) {
             var a = this.bloqueHorario[i];
             //Todo parece que vacio esta mal el ingreso de parametros
@@ -323,17 +348,17 @@
                 evt.end = new Fecha(evt.end).getTime();
 
                 if (new Fecha(evt.end).getTime() === a) {
-                    var evento = new EventoCont(id_evento_cont, evt.start, evt.end, this.calcularDiferenciaStartEnd(evt.start, evt.end).bloques);
+                    var evento = new EventoCont(idEventoCont, evt.start, evt.end, this.calcularDiferenciaStartEnd(evt.start, evt.end).bloques);
                     this.bloqueHorario[i] = evento;
                 } else if (new Fecha(evt.end).getTime() > a && new Fecha(evt.start).getTime() < a) {
-                    var evento = new EventoCont(id_evento_cont, evt.start, evt.end, this.calcularDiferenciaStartEnd(evt.start, evt.end).bloques);
+                    var evento = new EventoCont(idEventoCont, evt.start, evt.end, this.calcularDiferenciaStartEnd(evt.start, evt.end).bloques);
                     this.bloqueHorario[i] = evento;
                 } else if (new Fecha(evt.start).getTime() === a) {
-                    var evento = new Evento(this.id_actual, evt.start, evt.end, this.calcularDiferenciaStartEnd(evt.start, evt.end).bloques, evt.data);
+                    var evento = new Evento(this.idActual, evt.start, evt.end, this.calcularDiferenciaStartEnd(evt.start, evt.end).bloques, evt.data);
                     this.bloqueHorario[i] = evento;
 
-                    id_evento_cont = this.id_actual;
-                    this.id_actual++;
+                    idEventoCont = this.idActual;
+                    this.idActual++;
                 }
             }
         }
@@ -379,7 +404,7 @@
         var elmStart = parseInt(elm.dataset.start);
         for (var i = 0; i < this.bloqueHorario.length; i++) {
             var start = this.bloqueHorario[i].start;
-            if (start == elmStart) {
+            if (start === elmStart) {
 
                 var finHoraVacio = new Fecha(elmStart).setMinutes(new Fecha(elmStart).getMinutes() + 14);
                 this.bloqueHorario[i] = new Vacio(i, 1, elmStart, finHoraVacio);
@@ -416,7 +441,7 @@
 
             if (this.agregarHorarioMod(this.bloqueEdit)) {
                 this.crearHTML();
-            } else {}
+            }
         }
 
         this.controladorHTML.modalEdit.ok.addEventListener('click', saveModalEdit.bind(this), false);
@@ -481,9 +506,11 @@
 
                 var hora = new SL('p').elm;
                 if (objeto.evento) {
-                    var hora_txt = document.createTextNode(new Fecha(objeto.start).imprime() + ' - ' + new Fecha(objeto.end).imprime() + ' ' + objeto.data.title);
 
-                    this.addChild(hora, hora_txt);
+                    //Pintar data
+                    var horaTxt = document.createTextNode(new Fecha(objeto.start).imprime() + ' - ' + new Fecha(objeto.end).imprime() + ' ' + objeto.data.title + ' | ' + (objeto.data.text ? objeto.data.text : ''));
+
+                    this.addChild(hora, horaTxt);
                     this.addChild(bloque, hora);
 
                     this.addData(botonEliminar, [
@@ -499,20 +526,24 @@
 
                     i += a;
                 } else {
-                    var hora_txt = document.createTextNode(new Fecha(objeto.start).imprime());
+                    var horaTxt = document.createTextNode(new Fecha(objeto.start).imprime());
 
-                    this.addChild(hora, hora_txt);
+                    this.addChild(hora, horaTxt);
                     this.addChild(bloque, hora);
 
                     bloque.className = "vacio";
                     i++;
                 }
-
                 this.addChild(this.wrapp, bloque);
                 this.tamanioDivCont(this.wrapp);
                 arregloBLoque.push(a);
             }
         }
+    };
+    Dia.prototype.getEventos = function() {
+        return this.bloqueHorario.filter(function(b) {
+            return b instanceof Evento;
+        });
     };
 
     window.Dia = Dia;

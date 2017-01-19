@@ -1,0 +1,13 @@
+{
+    "rules":{
+        "camelcase": 1,
+        "comma-dangle": 2,
+        "quotes": 0,
+        "eqeqeq": "error",
+        "curly": "error",
+        "no-console": "error",
+        "no-empty": "error",
+        "no-extra-semi": "error",
+        no-irregular-whitespace: "error"
+    }
+}

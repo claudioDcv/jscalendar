@@ -19,6 +19,7 @@
     "express": "^4.14.0",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
+    "gulp-eslint": "^3.0.1",
     "gulp-jsbeautifier": "^2.0.4",
     "gulp-jsvalidate": "^3.0.0",
     "gulp-livereload": "^3.8.1",

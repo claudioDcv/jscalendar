@@ -33,6 +33,8 @@ var prettify = require('gulp-jsbeautifier');
 const jsValidate = require('gulp-jsvalidate');
 const babel = require('gulp-babel');
 var rename = require("gulp-rename");
+const eslint = require('gulp-eslint');
+
 
       var opts = {} ;
       opts.port = 3000;
@@ -53,11 +55,21 @@ gulp.task('scss', () => {
 
 gulp.task('_1', () =>
   gulp.src(['./public/DiaES6.js'])
+
+
+
     .pipe(babel({
               presets: ['es2015']
           }))
     .pipe(prettify())
     .pipe(jsValidate())
+    .pipe(eslint())
+    // eslint.format() outputs the lint results to the console.
+    // Alternatively use eslint.formatEach() (see Docs).
+    .pipe(eslint.format())
+    // To have the process exit with an error code (1) on
+    // lint error, return the stream and pipe to failAfterError last.
+    .pipe(eslint.failAfterError())
     .pipe(rename("Dia.js"))
     .pipe(gulp.dest('./public/'))
 );
