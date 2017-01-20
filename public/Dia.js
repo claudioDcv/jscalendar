@@ -10,6 +10,13 @@
       return e * 2;
     }
     
+    Generador de listas
+    
+    var a = ''
+    for(var i = 1; i < 26 ; i++){
+    	a += i + ': \b\n'
+    }
+    
     var arreglo = [1, 2, 3, 4, 5];
     var resultado = arreglo.map(doble);
     console.log(resultado); // [2, 4, 6, 8, 10];
