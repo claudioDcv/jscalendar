@@ -2,6 +2,9 @@
 
 (function(window) {
 
+    //(new Fecha)+(\([a-z._\)]+)+(.getTime\(\))
+    //this.time$2
+
     /*
     function doble(e) {
       return e * 2;
@@ -21,11 +24,9 @@
     console.log(personas);
     
     Equivalente usando la sintaxis arrow:
-    
     var personas = nombres.map((n, i) => { return { nombre: n, edad: edades[i] } });
     
     */
-
     var Dia = function Dia(data, fechaInicial, opts) {
         //Formato 05/24/2016 00:00:00
         this.BLOQUES_TOTALES = 96;
@@ -320,13 +321,13 @@
         for (var i = 0; i < this.BLOQUES_TOTALES; i++) {
             var a = this.bloqueHorario[i];
             var evt = evento;
-            if (new Fecha(evt.end).getTime() === a) {
+            if (this.time(evt.end) === a) {
                 var evento = new EventoCont(this.idActual, evt.start, evt.end, this.calcularDiferenciaStartEnd(evt.start, evt.end).bloques);
                 this.bloqueHorario[i] = evento;
-            } else if (new Fecha(evt.end).getTime() > a && new Fecha(evt.start).getTime() < a) {
+            } else if (this.time(evt.end) > a && this.time(evt.start) < a) {
                 var evento = new EventoCont(this.idActual, evt.start, evt.end, this.calcularDiferenciaStartEnd(evt.start, evt.end).bloques);
                 this.bloqueHorario[i] = evento;
-            } else if (new Fecha(evt.start).getTime() === a) {
+            } else if (this.time(evt.start) === a) {
                 var evento = new Evento(this.idActual, evt.start, evt.end, this.calcularDiferenciaStartEnd(evt.start, evt.end).bloques, evt.data);
                 this.bloqueHorario[i] = evento;
             }
@@ -339,21 +340,21 @@
         var idEventoCont = 0;
         for (var i = 0; i < this.BLOQUES_TOTALES; i++) {
             var a = this.bloqueHorario[i];
-            //Todo parece que vacio esta mal el ingreso de parametros
+
             var fechaCalculada = new Fecha(this.bloqueHorario[i]).setMinutes(new Fecha(this.bloqueHorario[i]).getMinutes() + 14);
             this.bloqueHorario[i] = new Vacio(i, 1, this.bloqueHorario[i], fechaCalculada);
             for (var j = 0; j < this.data.length; j++) {
                 var evt = this.data[j];
-                evt.start = new Fecha(evt.start).getTime();
-                evt.end = new Fecha(evt.end).getTime();
+                evt.start = this.time(evt.start);
+                evt.end = this.time(evt.end);
 
-                if (new Fecha(evt.end).getTime() === a) {
+                if (this.time(evt.end) === a) {
                     var evento = new EventoCont(idEventoCont, evt.start, evt.end, this.calcularDiferenciaStartEnd(evt.start, evt.end).bloques);
                     this.bloqueHorario[i] = evento;
-                } else if (new Fecha(evt.end).getTime() > a && new Fecha(evt.start).getTime() < a) {
+                } else if (this.time(evt.end) > a && this.time(evt.start) < a) {
                     var evento = new EventoCont(idEventoCont, evt.start, evt.end, this.calcularDiferenciaStartEnd(evt.start, evt.end).bloques);
                     this.bloqueHorario[i] = evento;
-                } else if (new Fecha(evt.start).getTime() === a) {
+                } else if (this.time(evt.start) === a) {
                     var evento = new Evento(this.idActual, evt.start, evt.end, this.calcularDiferenciaStartEnd(evt.start, evt.end).bloques, evt.data);
                     this.bloqueHorario[i] = evento;
 
@@ -436,8 +437,8 @@
             event.stopPropagation();
             this.controladorHTML.modalEdit.container.className = 'dia-hide dia dia-nuevo-evento-container dia-defecto-container';
             this.bloqueEdit.data.title = this.controladorHTML.modalEdit.title.value;
-            this.bloqueEdit.start = new Fecha(this.controladorHTML.modalEdit.start.value).getTime();
-            this.bloqueEdit.end = new Fecha(this.controladorHTML.modalEdit.end.value).getTime();
+            this.bloqueEdit.start = this.time(this.controladorHTML.modalEdit.start.value);
+            this.bloqueEdit.end = this.time(this.controladorHTML.modalEdit.end.value);
 
             if (this.agregarHorarioMod(this.bloqueEdit)) {
                 this.crearHTML();
@@ -482,6 +483,12 @@
         openModal(self);
     };
     Dia.prototype.crearHTML = function() {
+        /* accion que se ejecuta cuando se hace click en un bloque type Vacio*/
+        var _fnVacio = function _fnVacio(event) {
+            var start = event.target.dataset.start;
+            //new Fecha(parseInt(start))
+            event.target.innerHTML = '' + event.target.innerHTML;
+        };
 
         this.wrapp.innerHTML = "";
         var arregloBLoque = [];
@@ -508,7 +515,9 @@
                 if (objeto.evento) {
 
                     //Pintar data
-                    var horaTxt = document.createTextNode(new Fecha(objeto.start).imprime() + ' - ' + new Fecha(objeto.end).imprime() + ' ' + objeto.data.title + ' | ' + (objeto.data.text ? objeto.data.text : ''));
+                    var template = '\n' + new Fecha(objeto.start).imprime() + ' - ' + new Fecha(objeto.end).imprime() + '\n' + objeto.data.title + ' |\n' + (objeto.data.text ? objeto.data.text : '') + '\n';
+
+                    var horaTxt = document.createTextNode(template);
 
                     this.addChild(hora, horaTxt);
                     this.addChild(bloque, hora);
@@ -516,7 +525,7 @@
                     this.addData(botonEliminar, [
                         ['bloque', a],
                         ['numero', i],
-                        ['start', new Fecha(objeto.start).getTime()]
+                        ['start', this.time(objeto.start)]
                     ]);
                     botonEliminar.addEventListener('click', this.clicYEliminarEvento.bind(this), false);
                     botonEditar.addEventListener('click', this.clicYEditarEvento.bind(this), false);
@@ -532,6 +541,10 @@
                     this.addChild(bloque, hora);
 
                     bloque.className = "vacio";
+                    bloque.dataset.start = objeto.start;
+
+                    bloque.addEventListener('click', _fnVacio.bind(this), false);
+
                     i++;
                 }
                 this.addChild(this.wrapp, bloque);

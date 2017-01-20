@@ -56,8 +56,6 @@ gulp.task('scss', () => {
 gulp.task('_1', () =>
   gulp.src(['./public/DiaES6.js'])
 
-
-
     .pipe(babel({
               presets: ['es2015']
           }))
@@ -87,7 +85,7 @@ gulp.task('_1', () =>
 
 
 
-gulp.task('watch', () => {
-  refresh.listen()
-  gulp.watch('**/*.js', ['pf'])
+gulp.task('_w', () => {
+  //refresh.listen()
+  gulp.watch('./public/DiaES6.js', ['_1'])
 })
