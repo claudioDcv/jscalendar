@@ -53,6 +53,7 @@ button.agregar-evento{
   right: 0;
 }
 
+.dia-defecto-ventana select.fecha,
 .dia-defecto-ventana input.fecha{
   width: 50%;
   border: solid 1px hsl(0, 0%, 27%);

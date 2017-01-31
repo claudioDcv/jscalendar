@@ -161,11 +161,12 @@ Calendar.prototype.createStyle = function(){
 Calendar.prototype.crearTagDelMes = function(){
 
 		var fn_show_day = function(event){
-			console.log(event,this);
-		}
 
+      var fechaSeleccionada = new Fecha(this.actual.fecha).setDate(parseInt(event.srcElement.innerText));
 
-
+			//console.log(fechaSeleccionada,event.srcElement.innerText,this.actual);
+      var dia = new Dia(data,fechaSeleccionada,{bloque_minimo:15});
+    }
 
         this.removerLosHijos(this.table);
         this.table.className = "calendar-container";
@@ -207,9 +208,12 @@ Calendar.prototype.crearTagDelMes = function(){
         var td= document.createElement('TD');
             td.appendChild(txt);
 
-						td.addEventListener('click',fn_show_day.bind(this),false);
+
 
 						if (this.arregloDelMes[cont].isMesActual) {
+
+              td.style.cursor = "pointer";
+              td.addEventListener('click',fn_show_day.bind(this),false);
 
 							if (this.arregloDelMes[cont].diaMes == this.actual.diaMes) {
 								td.className = "dia-mes-init"

@@ -1,9 +1,8 @@
-'use strict';
 (function(window) {
-
+  'use strict';
 //(new Fecha)+(\([a-z._\)]+)+(.getTime\(\))
 //this.time$2
-
+//https://www.youtube.com/watch?v=-1usfRUFPH8
 /*
 function doble(e) {
   return e * 2;
@@ -51,11 +50,15 @@ var Dia = function Dia(data, fechaInicial, opts) {
     this.dia = document.getElementById('dia-calendario');
     this.wrapp = document.createElement('div');
     this.wrapp.id = "dia";
+
+    this.dia = this.deleteChild(this.dia);
+
     this.dia.appendChild(this.wrapp);
 
     this.controladorHTML = new ControladorHTML(this);
     this.initActionModalEdit();
     this.setData(data);
+
 };
 Dia.prototype.time = function (date) {
   return new Fecha(date).getTime();
@@ -307,6 +310,9 @@ Dia.prototype.calculaDesdeInicio = function(start) {
     for (var i = 0; i < this.BLOQUES_TOTALES; i++) {
         //TODO get minutos cambiar de 15 a 30 segun corresponda
         this.fecha.setMinutes(this.fecha.getMinutes() + this.bloqueMinimo);
+
+        var a = new Fecha(start);
+        var b = new Fecha(this.fecha);
         if (this.time(start) === this.time(this.fecha)) {
             bloquesDesdeInicio = i + 1;
             break;
@@ -564,9 +570,67 @@ ${objeto.data.text ? objeto.data.text : ''}
             arregloBLoque.push(a);
         }
     }
+
+    this.crearSelect();
+
 };
 Dia.prototype.getEventos = function () {
   return this.bloqueHorario.filter(b => b instanceof Evento);
+}
+Dia.prototype.getBloque = function () {
+  return this.bloqueHorario
+}
+
+Dia.prototype.getHorariosLibres = function () {
+  var horarioInicial = new Fecha(this.fechaInicial);
+  var salida = '';
+  var horasVacias = this.bloqueHorario.filter(b => b instanceof Vacio);
+
+  var reObj = horasVacias.map(b => b.start);
+
+  return reObj;
+}
+
+Dia.prototype.crearSelect = function () {
+  var data = this.getHorariosLibres();
+  var select = this.deleteChild(this.controladorHTML.init);
+      select.name = "inicio";
+      select.className = "fecha";
+
+      var option = document.createElement('OPTION');
+          option.value = '';
+      var text = document.createTextNode('Seleccione');
+          option.appendChild(text);
+      select.appendChild(option);
+
+
+  data.forEach(dat => {
+    let option = document.createElement('OPTION');
+
+        var hora = (new Fecha(dat).getHours()+"");
+        var minuto = (new Fecha(dat).getMinutes()+"");
+
+        hora = (hora.length < 2 ? "0" + hora : hora);
+        minuto = (minuto.length < 2 ? "0" + minuto : minuto);
+
+        dat = hora + ":" + minuto;
+
+        option.value = dat;
+        var text = document.createTextNode(dat);
+        option.appendChild(text);
+        select.appendChild(option);
+  });
+
+
+  //var s = this.controladorHTML.init;
+  var e = this.controladorHTML.end;
+
+  // if (s.parentNode) {
+  //     var a = s.parentNode.replaceChild(select, s);
+  // }
+
+  //var b = e.parentNode.replaceChild(select2, e);
+
 }
 
 window.Dia = Dia;
